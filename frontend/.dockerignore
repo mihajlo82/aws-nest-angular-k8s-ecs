@@ -1,0 +1,9 @@
+node_modules
+.angular
+.cache
+.git
+Dockerfile
+npm-debug.log
+*.log
+.env
+
