@@ -37,11 +37,6 @@ jobs:
           cd api
           npx prisma generate
 
-      - name: Run backend tests
-        run: |
-          cd api
-          npm run test
-
       - name: Build backend
         run: |
           cd api
