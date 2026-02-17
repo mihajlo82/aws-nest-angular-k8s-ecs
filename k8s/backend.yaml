@@ -2,6 +2,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: backend
+  labels:
+    app: backend
 spec:
   replicas: 2
   selector:
@@ -12,21 +14,38 @@ spec:
       labels:
         app: backend
     spec:
+      initContainers:
+        - name: wait-for-postgres
+          image: busybox
+          command:
+            - sh
+            - -c
+            - |
+              echo "Waiting for Postgres..."
+              until nc -z postgres-service 5432; do
+                echo "Postgres not ready yet..."
+                sleep 2
+              done
       containers:
         - name: backend
-          image: YOUR_BACKEND_IMAGE
+          image: 164941546775.dkr.ecr.us-east-1.amazonaws.com/taskflow-backend:latest
           ports:
             - containerPort: 3000
           env:
             - name: DATABASE_URL
-              value: postgresql://postgres:root@postgres:5432/taskflowdb
+              value: postgresql://postgres:root@postgres-service:5432/taskflowdb
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: backend
+  labels:
+    app: backend
 spec:
+  type: ClusterIP
   selector:
     app: backend
   ports:
     - port: 3000
+      targetPort: 3000
+kubectl apply -f backend.yaml

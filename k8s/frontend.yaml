@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: YOUR_FRONTEND_IMAGE
+          image: 164941546775.dkr.ecr.us-east-1.amazonaws.com/taskflow-frontend:latest
           ports:
             - containerPort: 80
 ---
@@ -28,3 +28,4 @@ spec:
     app: frontend
   ports:
     - port: 80
+      targetPort: 80
